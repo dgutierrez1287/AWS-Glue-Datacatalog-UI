@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% load django_bootstrap5 %}
+
+    {% bootstrap_css %}
+
+    {% bootstrap_javascript %}
+
+    {% bootstrap_messages %}
+    <title>Glue Datacatalog - Table View</title>
+     <div class="container">
+    <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
+      <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
+        <svg class="bi me-2" width="40" height="32"><use xlink:href="#bootstrap"/></svg>
+        <span class="fs-4">AWS Glue Data Catalog</span>
+      </a>
+
+      <ul class="nav nav-pills">
+        <li class="nav-item"><a href="/">Home</a></li>
+      </ul>
+    </header>
+  </div>
+    <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3">
+          <input type="search" class="form-control" placeholder="Search..." aria-label="Search">
+    </form>
+</head>
+<body>
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="/">Databases</a></li>
+      <li class="breadcrumb-item"><a href="/tables?db={{ db_name }}">{{db_name}} - Tables</a></li>
+      <li class="breadcrumb-item active" aria-current="page">{{ table_name }}</li>
+  </ol>
+</nav>
+{% if table_description != '' %}
+<div class="float-left">Table Description: {{table_description}}</div>
+{% endif %}
+<div class="float-right">Table Update Time: {{table_update_time}}</div>
+{% if paging == 'yes' %}
+  <nav aria-label="Page navigation example">
+  <ul class="pagination justify-content-center">
+      {% if page_num == 1 %}
+      <li class="page-item disabled"><a class="page-link" href="" tabindex="-1" aria-disabled="true">Previous</a></li>
+      {% else %}
+      <li class="page-item"><a class="page-link" href="/table-view/paged?db={{db_name}}&table={{table_name}}&num_pages={{num_of_pages}}&page={{prev_page}}">Previous</a></li>
+      {% endif %}
+    {% for p in pages %}
+        {% if p == page_num %}
+        <li class="page-item active">
+        {% else %}
+        <li class="page-item">
+        {% endif %}
+        <a class="page-link" href="/table-view/paged?db={{db_name}}&table={{table_name}}&num_pages={{num_of_pages}}&page={{p}}">{{ p }}</a></li>
+    {% endfor %}
+    {% if page_num == last_page %}
+    <li class="page-item disabled"><a class="page-link" href="#" tabindex="-1" aria-disabled="true">Next</a></li>
+    {% else %}
+    <li class="page-item"><a class="page-link" href="/table-view/paged?db={{db_name}}&table={{table_name}}&num_pages={{num_of_pages}}&page={{next_page}}">Next</a></li>
+    {% endif %}
+  </ul>
+  </nav>  
+  {% endif %}
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Name</th>
+      <th scope="col">Type</th>
+      <th scope="col">Comment</th>
+    </tr>
+  </thead>
+  <tbody>
+      {% for col in columns %}
+      <tr>
+          <td>{{col.name}}</td>
+          <td>{{col.col_type}}</td>
+          <td>{{col.comment}}</td>
+      </tr>   
+      {% endfor %}
+  </tbody>
+</table>
+{% if paging == 'yes' %}
+  <nav aria-label="Page navigation example">
+  <ul class="pagination justify-content-center">
+      {% if page_num == 1 %}
+      <li class="page-item disabled"><a class="page-link" href="" tabindex="-1" aria-disabled="true">Previous</a></li>
+      {% else %}
+      <li class="page-item"><a class="page-link" href="/table-view/paged?db={{db_name}}&table={{table_name}}&num_pages={{num_of_pages}}&page={{prev_page}}">Previous</a></li>
+      {% endif %}
+    {% for p in pages %}
+        {% if p == page_num %}
+        <li class="page-item active">
+        {% else %}
+        <li class="page-item">
+        {% endif %}
+        <a class="page-link" href="/table-view/paged?db={{db_name}}&table={{table_name}}&num_pages={{num_of_pages}}&page={{p}}">{{ p }}</a></li>
+    {% endfor %}
+    {% if page_num == last_page %}
+    <li class="page-item disabled"><a class="page-link" href="#" tabindex="-1" aria-disabled="true">Next</a></li>
+    {% else %}
+    <li class="page-item"><a class="page-link" href="/table-view/paged?db={{db_name}}&table={{table_name}}&num_pages={{num_of_pages}}&page={{next_page}}">Next</a></li>
+    {% endif %}
+  </ul>
+  </nav>  
+  {% endif %}
+
+</body>
+</html>
+

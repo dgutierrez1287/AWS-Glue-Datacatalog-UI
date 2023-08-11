@@ -1,0 +1,5 @@
+django==4.2.4
+django-bootstrap5==23.3
+django-environ==0.10.0
+boto3==1.28.20
+
